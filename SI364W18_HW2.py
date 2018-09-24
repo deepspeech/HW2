@@ -1,6 +1,6 @@
-## SI 364
-## Fall 2018
-## HW 2 - Part 1
+#** Nunez, Priscilla
+#** Fall 2018
+#** HW 2 - Part 1
 
 ## This homework has 3 parts, all of which should be completed inside this file (and a little bit inside the /templates directory).
 
@@ -23,19 +23,17 @@ from wtforms.validators import Required
 ##### APP SETUP #####
 #####################
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'hardtoguessstring'
+app = Flask(__name__)      
+app.config['SECRET_KEY'] = 'hardtoguessstring'    #** Environment Variable and hardcoded string  
 
 ####################
 ###### FORMS #######
 ####################
 
-class AlbumEntryForm(FlaskForm):
+class AlbumEntryForm(FlaskForm):                  #** Form - string, validation and labels
     album_name = StringField('Enter the name of an album:',  validators=[Required()])
     options = RadioField('How much do you like this album? (1 low, 3 high)', validators=[Required()], choices=[('1','1'), ('2','2'), ('3','3')], default='3')
     submit = SubmitField('Submit')
-
-
 
 
 ####################
@@ -49,21 +47,21 @@ def hello_world():
 
 @app.route('/user/<name>')
 def hello_user(name):
-    return '<h1>Hello {0}<h1>'.format(name)
+    return '<h1>Hello {0}<h1>'.format(name)       #** 0 is for (name)
 
-@app.route('/artistform')
+@app.route('/artistform')                         #** Has artistform.html page
 def artistform():
     return render_template('artistform.html')
 
 @app.route('/artistinfo')
 def artistinfo():
-    artist = request.args.get('artist')
+    artist = request.args.get('artist')           #** Normal form is used 
     if artist:
         url = "https://itunes.apple.com/search"
         params = {"media": "music", "term": artist}
         get_name = requests.get(url, params = params)
         json_format = json.loads(get_name.text)
-        
+                                                  
     return render_template('artist_info.html', objects=json_format["results"])
 
 @app.route('/artistlinks')
@@ -81,12 +79,12 @@ def specific_song(artist_name):
         context = {
             'results': json_format["results"],
         }
-    return render_template('specific_artist.html', **context) #group all context together and pass them to template
+    return render_template('specific_artist.html', **context) #**  **context - will group all context together and pass them to template. All the data (variables passed) used to render itself in templates. Example: 'form','data', 'results'
 
 @app.route('/album_entry')
 def album_entry():
-    form = AlbumEntryForm()
-    return render_template('album_entry.html', form=form)
+    form = AlbumEntryForm()                                   #** Create Instance of form
+    return render_template('album_entry.html', form=form)     #** Pass down
 
 @app.route('/album_result')
 def album_result():
@@ -96,7 +94,7 @@ def album_result():
    
     data = {
         "star": star,
-        "album_name": album_name
+        "album_name": album_name                              #** Added paragraph inbetween {{form.album_name.label}} and added label options along with submit button
     }
     
     return render_template('album_data.html', data=data)
